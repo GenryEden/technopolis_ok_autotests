@@ -7,4 +7,5 @@ public class OKMainPage {
     public String getName(){
         return $(By.xpath(ownPageButtonXPath)).getOwnText();
     }
+
 }

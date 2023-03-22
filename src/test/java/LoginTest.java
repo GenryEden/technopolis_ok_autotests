@@ -14,7 +14,7 @@ public class LoginTest {
     public void canLogin(){
         open("https://ok.ru/");
         OkLoginPage okLoginPage = new OkLoginPage();
-        var okMainPage = okLoginPage.login("your-login-here", "your-password here");
-        assertEquals(okMainPage.getName(), "your-name-here");
+        var okMainPage = okLoginPage.login("botS23AT8", "autotests2023");
+        assertEquals(okMainPage.getName(), "botS23AT8 botS23AT8");
     }
 }

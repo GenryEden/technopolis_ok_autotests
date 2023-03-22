@@ -6,7 +6,7 @@ public class OkLoginPage {
     private static final String loginFieldID = "field_email";
     private static final String passwordFieldID = "field_password";
 
-    private static final String loginButtonXPath = "//input[@value='Log in to OK']";
+    private static final String loginButtonXPath = "//input[@data-l='t,sign_in']";
     public OKMainPage login(String login, String pass) {
         $(By.id(loginFieldID)).clear();
         $(By.id(loginFieldID)).sendKeys(login);
