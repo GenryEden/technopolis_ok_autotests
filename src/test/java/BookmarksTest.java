@@ -1,3 +1,4 @@
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -5,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 
 import static com.codeborne.selenide.Selenide.open;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BookmarksTest {
@@ -37,7 +39,8 @@ public class BookmarksTest {
         BookmarksPage.openPage();
         var bookmarks = bookmarksPage.getBookmarksTopics();
         if (bookmarks.size() > 0) {
-            assertNotEquals(bookmarks.getFirst(), firstBookMark);
+//            assertNotEquals(bookmarks.getFirst(), firstBookMark);
+            assertThat(bookmarks.getFirst(), Matchers.not(Matchers.equalTo(firstBookMark)));
         }
     }
 

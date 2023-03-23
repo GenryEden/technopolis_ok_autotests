@@ -1,11 +1,11 @@
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
 import static com.codeborne.selenide.Selenide.open;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
 
 public class ProfileTests {
     private static final String notFriendId = "kernelpunik";
@@ -19,11 +19,11 @@ public class ProfileTests {
         return ProfilePage.goByUserName(notFriendId);
     }
     @Test
-    @Disabled("отключено до перепроверки под линуксом, под виндой приколы")
+//    @Disabled("отключено до перепроверки под линуксом, под виндой приколы c кодировкой")
     public void checkAName(){
         var profilePage = getNotFriendProfilePage();
         String name = profilePage.getName();
-        assertEquals("Виталий Емельянов", name);
+        assertThat(name, equalToIgnoringCase("Виталий Емельянов"));
     }
 
     @Test
@@ -41,12 +41,15 @@ public class ProfileTests {
     }
 
     @Test
-    @Disabled("отключено до перепроверки под линуксом, под виндой приколы")
+//    @Disabled("отключено до перепроверки под линуксом, под виндой приколы c кодировкой")
     public void checkProfile(){
         var profilePage = getNotFriendProfilePage();
-        assertAll(
-                () -> assertEquals("Виталий Емельянов", profilePage.getName()),
-                () -> assertEquals(profilePage.getDateOfBirth(), "21 ноября 2003")
+        assertThat(profilePage.getProfileInfo(),
+                SimilarProfileMatcher.isSimilarTo(
+                        new ProfileInfo()
+                                .setDateOfBirth("21 ноября 2003")
+                                .setName("Виталий Емельянов")
+                )
         );
     }
 
