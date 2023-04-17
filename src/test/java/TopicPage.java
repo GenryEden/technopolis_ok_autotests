@@ -6,6 +6,7 @@ import static com.codeborne.selenide.Selenide.open;
 public class TopicPage {
     private static final String addBookmarksButtonLocator = "//a[@class='mall-widget_item mt-2x']";
     private static final String removeBookmarksButtonLocator = "//a[@class='mall-widget_item mt-2x  __active']";
+    private static final String closeButtonLocator = "//div[@class=\"ic media-layer_close_ico\"]";
     private final String url;
     public static TopicPage getByUsernameAndID(String username, long id) {
         String url = "https://ok.ru/" + username + "/topic/" + id;
@@ -47,5 +48,9 @@ public class TopicPage {
         if (isMarked()) {
             removeFromBookmarks();
         }
+    }
+
+    public void close() {
+        $(By.xpath(closeButtonLocator)).click();
     }
 }
