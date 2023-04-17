@@ -1,4 +1,6 @@
 import static com.codeborne.selenide.Selenide.open;
+
+import com.codeborne.selenide.Condition;
 import org.openqa.selenium.By;
 
 import java.util.Arrays;
@@ -15,10 +17,20 @@ public class ProfilePage {
 
     private static final String lastVisitTime = "//div[@class='main-content-header_title']//span";
     // здесь локатор большой и неочевидный, поскольку у этого span класс какой-то очень странный, не уверен, что он надолго
+    public ProfilePage() {
+        check();
+    }
+
     public static ProfilePage goById(long id) {
         String url = "https://ok.ru/profile/" + id;
         open(url);
         return new ProfilePage();
+    }
+
+    public void check() {
+        $(By.xpath(nameLocator)).should(Condition.exist);
+        $(By.xpath(ageLocator)).should(Condition.exist);
+        $(By.xpath(lastVisitTime)).should(Condition.exist);
     }
 
     public static ProfilePage goByUserName(String userName) {

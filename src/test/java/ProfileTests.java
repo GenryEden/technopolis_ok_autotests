@@ -15,11 +15,10 @@ public class ProfileTests {
         (new OkLoginPage()).login("botS23AT8", "autotests2023");
     }
 
-    private static ProfilePage getNotFriendProfilePage(){
+    public static ProfilePage getNotFriendProfilePage(){
         return ProfilePage.goByUserName(notFriendId);
     }
     @Test
-    @Disabled("отключено до перепроверки под линуксом, под виндой приколы")
     public void checkAName(){
         var profilePage = getNotFriendProfilePage();
         String name = profilePage.getName();
@@ -33,15 +32,6 @@ public class ProfileTests {
     }
 
     @Test
-    @Disabled("не разобрался, как навестись и нажать")
-    public void createFriendInviteAndCancel(){
-        var profilePage = getNotFriendProfilePage();
-        profilePage.sendFriendRequest();
-        profilePage.cancelFriendRequest();
-    }
-
-    @Test
-    @Disabled("отключено до перепроверки под линуксом, под виндой приколы")
     public void checkProfile(){
         var profilePage = getNotFriendProfilePage();
         assertAll(

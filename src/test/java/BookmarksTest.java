@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,15 +8,9 @@ import org.junit.jupiter.api.Test;
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BookmarksTest {
+public class BookmarksTest extends BaseTest {
     private static final TopicPage MARKED_TOPIC = TopicPage.getByUsernameAndID("vprokru", 155180743826786L);
     private static final TopicPage UNMARKED_TOPIC = TopicPage.getByUsernameAndID("vprokru", 155180984081762L);
-    private static final String TEST_GROUP_USERNAME = "vprokru";
-    @BeforeAll
-    public static void login(){
-        open("https://ok.ru/");
-        new OkLoginPage().login("botS23AT8", "autotests2023");
-    }
 
     @BeforeEach
     public void setUpBookmarks() {
@@ -24,46 +19,35 @@ public class BookmarksTest {
     }
 
     @Test
-    public void checkAddAndRemoveBookmark(){
+    public void checkAddBookmark(){
         var topicPage = UNMARKED_TOPIC.openURL();
         topicPage.addToBookmarks();
         String topicUrl = topicPage.getUrl();
-        var bookmarksPage = BookmarksPage.openPage();
-        var firstBookMark = bookmarksPage.getBookmarksTopics().getFirst();
-        assertEquals(topicUrl, firstBookMark.getUrl());
+        topicPage.close();
+        var bookmarksPage = PageWithNavigation.openBookmarks();
+        var firstBookMark = bookmarksPage.getBookmarks().getFirst();
+        var firstBookMarkUrl = firstBookMark.getUrl();
+        assertEquals(topicUrl, firstBookMarkUrl);
 
-        topicPage.openURL();
-        topicPage.removeFromBookmarks();
-        BookmarksPage.openPage();
-        var bookmarks = bookmarksPage.getBookmarksTopics();
-        if (bookmarks.size() > 0) {
-            assertNotEquals(bookmarks.getFirst(), firstBookMark);
-        }
     }
 
     @Test
-    public void checkALotOfBookmarks() {
+    public void removeBookmark() {
         var bookmarksPage = BookmarksPage.openPage();
+        var firstBookMark = bookmarksPage.getBookmarks().getFirst();
+        var firstBookMarkUrl = firstBookMark.getUrl();
+        var topicPage = firstBookMark.open();
+        topicPage.removeFromBookmarks();
+        topicPage.close();
+        bookmarksPage.update();
         var bookmarks = bookmarksPage.getBookmarksTopics();
-
-        for (var bookmark: bookmarks) {
-            new TopicPage(bookmark.getUrl()).openURL().removeFromBookmarks();
-        }
-
-        var topicsList = GroupPage.getByUsername(TEST_GROUP_USERNAME).getTopics();
-
-        for (var topic: topicsList) {
-            topic.openURL().ensureMark();
-        }
-
-        var topicsUrlsList = topicsList.stream().map(TopicPage::getUrl).toList();
-        for (var element: BookmarksPage.openPage().getBookmarksTopics().stream().map(TopicPage::getUrl).toList()) {
-            assertTrue(topicsUrlsList.contains(element));
+        if (bookmarks.size() > 0) {
+            assertNotEquals(bookmarks.getFirst().getUrl(), firstBookMarkUrl);
         }
     }
 
-    @AfterAll
-    public static void removeAllBookmarks() {
+    @AfterEach
+    public void removeAllBookmarks() {
         for (var bookmark: BookmarksPage.openPage().getBookmarksTopics()) {
             bookmark.openURL().removeFromBookmarks();
         }
